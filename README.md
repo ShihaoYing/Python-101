@@ -1,2 +1,2 @@
-# Python-101
-学python，做做笔记 练练手
+# Titanic
+answer for kaggle competition Titanic
