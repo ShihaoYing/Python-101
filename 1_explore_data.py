@@ -217,12 +217,43 @@ def convert_fare():
         dataset['Fare'] = dataset['Fare'].astype(int)
     train_df = train_df.drop(['FareBand'], axis=1)
     combine = [train_df, test_df]
-    print(train_df.head(10))
-    print(test_df.head(10))
+    # print(train_df.head(10))
+    # print(test_df.head(10))
     return train_df, test_df, combine
 
 
-convert_fare()
+def xy_split_train():
+    train_df, test_df, combine = convert_fare()
+    X_train = train_df.drop("Survived", axis=1)
+    Y_train = train_df["Survived"]
+    print(X_train.shape, Y_train.shape)
+    return X_train, Y_train
+
+
+def xy_split_test():
+    train_df, test_df, combine = convert_fare()
+    X_test  = test_df.drop("PassengerId", axis=1).copy()
+    return X_test
+
+
+def log_reg():
+    X_train, Y_train = xy_split_train()
+    X_test = xy_split_test()
+    logreg = LogisticRegression()
+    logreg.fit(X_train, Y_train)
+    Y_pred = logreg.predict(X_test)
+    acc_log = round(logreg.score(X_train, Y_train) * 100, 2)
+    print(acc_log)
+
+
+log_reg()
+
+
+
+
+
+
+
 
 
 # Note:
