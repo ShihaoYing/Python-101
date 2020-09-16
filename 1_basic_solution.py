@@ -226,7 +226,7 @@ def xy_split_train():
     train_df, test_df, combine = convert_fare()
     X_train = train_df.drop("Survived", axis=1)
     Y_train = train_df["Survived"]
-    print(X_train.shape, Y_train.shape)
+    # print(X_train.shape, Y_train.shape)
     return X_train, Y_train
 
 
@@ -243,19 +243,126 @@ def log_reg():
     logreg.fit(X_train, Y_train)
     Y_pred = logreg.predict(X_test)
     acc_log = round(logreg.score(X_train, Y_train) * 100, 2)
-    print(acc_log)
+    # print(acc_log)
+    return acc_log
 
 
-log_reg()
+def svc():
+    X_train, Y_train = xy_split_train()
+    X_test = xy_split_test()
+    svc = SVC()
+    svc.fit(X_train, Y_train)
+    Y_pred = svc.predict(X_test)
+    acc_svc = round(svc.score(X_train, Y_train)*100, 2)
+    # print(acc_svc)
+    return acc_svc
+
+def knn():
+    X_train, Y_train = xy_split_train()
+    X_test = xy_split_test()
+    knn = KNeighborsClassifier(n_neighbors = 3)
+    knn.fit(X_train, Y_train)
+    Y_pred = knn.predict(X_test)
+    acc_knn = round(knn.score(X_train, Y_train)*100,2)
+    # print(acc_knn)
+    return acc_knn
 
 
+def gaussian():
+    X_train, Y_train = xy_split_train()
+    X_test = xy_split_test()
+    gaussian = GaussianNB()
+    gaussian.fit(X_train, Y_train)
+    Y_pred = gaussian.predict(X_test)
+    acc_gaussian = round(gaussian.score(X_train, Y_train)*100, 2)
+    # print(acc_gaussian)
+    return acc_gaussian
 
 
+def perceptron():
+    X_train, Y_train = xy_split_train()
+    X_test = xy_split_test()
+    perceptron = Perceptron()
+    perceptron.fit(X_train, Y_train)
+    Y_pred = perceptron.predict(X_test)
+    acc_perceptron = round(perceptron.score(X_train, Y_train) * 100, 2)
+    # print(acc_perceptron)
+    return acc_perceptron
 
 
+def linear_SVC():
+    X_train, Y_train = xy_split_train()
+    X_test = xy_split_test()
+    linear_svc = LinearSVC()
+    linear_svc.fit(X_train, Y_train)
+    Y_pred = linear_svc.predict(X_test)
+    acc_linear_svc = round(linear_svc.score(X_train, Y_train) * 100, 2)
+    # print(acc_linear_svc)
+    return acc_linear_svc
 
 
+def sgd():
+    X_train, Y_train = xy_split_train()
+    X_test = xy_split_test()
+    sgd = SGDClassifier()
+    sgd.fit(X_train, Y_train)
+    Y_pred = sgd.predict(X_test)
+    acc_sgd = round(sgd.score(X_train, Y_train) * 100, 2)
+    # print(acc_sgd)
+    return acc_sgd
 
+
+def decision_tree():
+    X_train, Y_train = xy_split_train()
+    X_test = xy_split_test()
+    decision_tree = DecisionTreeClassifier()
+    decision_tree.fit(X_train, Y_train)
+    Y_pred = decision_tree.predict(X_test)
+    acc_decision_tree = round(decision_tree.score(X_train, Y_train) * 100, 2)
+    print(acc_decision_tree)
+    # return acc_decision_tree
+    return Y_pred
+
+
+def random_forest():
+    X_train, Y_train = xy_split_train()
+    X_test = xy_split_test()
+    random_forest = RandomForestClassifier(n_estimators=100)
+    random_forest.fit(X_train, Y_train)
+    Y_pred = random_forest.predict(X_test)
+    random_forest.score(X_train, Y_train)
+    acc_random_forest = round(random_forest.score(X_train, Y_train) * 100, 2)
+    print(acc_random_forest)
+    # return acc_random_forest
+    return Y_pred
+
+def evaluation():
+    models = pd.DataFrame({
+        'Model':['Support Vector Machines', 'KNN', 'Logistic Regression', 
+              'Random Forest', 'Naive Bayes', 'Perceptron', 
+              'Stochastic Gradient Decent', 'Linear SVC', 
+              'Decision Tree'],
+        'Score':[svc(), knn(), log_reg(),random_forest(),
+                gaussian(), perceptron(), sgd(), linear_SVC(),
+                decision_tree()]
+    })
+    models = models.sort_values(by = 'Score', ascending = False)
+    print(models)
+    print(models.dtypes)
+    return models
+
+
+def submission():
+    Y_pred = decision_tree()
+    train_df, test_df, combine = convert_fare()
+    submission = pd.DataFrame({
+        "PassengerId": test_df["PassengerId"],
+        "Survived": Y_pred
+    })
+    print(submission.head())
+    submission.to_csv('./output/submission_DT.csv', index=False)
+
+submission()
 # Note:
 # Question List:
 #
